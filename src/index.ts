@@ -11,8 +11,10 @@ const app = new Hono()
 app.use('/*', cors({
   origin: 'https://vessify-front-a1m9.vercel.app', // Frontend URL - must be specific when using credentials
   credentials: true,
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization', 'X-Organization-Id'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Organization-Id', 'Cookie'],
+  exposeHeaders: ['Set-Cookie'],
+  maxAge: 86400, // 24 hours
 }))
 
 // Health check

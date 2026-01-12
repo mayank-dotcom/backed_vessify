@@ -19,6 +19,19 @@ export const auth = betterAuth({
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days in seconds
         updateAge: 60 * 60 * 24, // 1 day
+        cookieCache: {
+            enabled: true,
+            maxAge: 60 * 5 // 5 minutes
+        }
+    },
+    advanced: {
+        // Cookie settings for cross-origin requests
+        cookiePrefix: "better_auth",
+        crossSubDomainCookies: {
+            enabled: true
+        },
+        useSecureCookies: true, // Required for HTTPS
+        generateId: () => crypto.randomUUID()
     },
     plugins: [
         jwt({
