@@ -50,9 +50,10 @@ app.notFound((c) => {
 
 const port = parseInt(process.env.PORT || '3000')
 
-console.log(`🚀 Server starting on http://localhost:${port}`)
+console.log(`🚀 Server starting on port ${port}`)
 
 serve({
   fetch: app.fetch,
-  port,
+  port: port,
+  hostname: '0.0.0.0'
 })
