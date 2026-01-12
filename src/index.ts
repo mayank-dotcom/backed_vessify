@@ -9,7 +9,7 @@ const app = new Hono()
 
 // CORS configuration
 app.use('/*', cors({
-  origin: 'http://localhost:3000', // Frontend URL - must be specific when using credentials
+  origin: 'https://vessify-front-a1m9.vercel.app', // Frontend URL - must be specific when using credentials
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'X-Organization-Id'],
