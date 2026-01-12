@@ -27,7 +27,7 @@ app.get('/', (c) => {
 // Better Auth routes - handles all authentication endpoints
 // Includes: /api/auth/sign-in, /api/auth/sign-up, /api/auth/sign-out, 
 // /api/auth/session, /api/auth/token (JWT), /api/auth/jwks, etc.
-app.on(['POST', 'GET'], '/api/auth/**', (c) => {
+app.all('/api/auth/*', (c) => {
   return auth.handler(c.req.raw)
 })
 
