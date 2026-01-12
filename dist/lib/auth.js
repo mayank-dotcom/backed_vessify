@@ -28,8 +28,8 @@ exports.auth = (0, better_auth_1.betterAuth)({
     },
     plugins: [
         (0, plugins_1.jwt)({
-        // JWT will be automatically generated and available via /api/auth/token endpoint
-        // Tokens are signed using Ed25519 algorithm by default
+            // JWT will be automatically generated and available via /api/auth/token endpoint
+            // Tokens are signed using Ed25519 algorithm by default
         }),
         (0, plugins_1.organization)({
             async sendInvitationEmail(data) {
@@ -43,5 +43,5 @@ exports.auth = (0, better_auth_1.betterAuth)({
     ],
     secret: process.env.BETTER_AUTH_SECRET || "secret-key-change-in-production",
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3001/api/auth",
-    trustedOrigins: ["http://localhost:3000"], // Frontend URL
+    trustedOrigins: ["http://localhost:3000", "https://vessify-front-a1m9.vercel.app"], // Frontend URL
 });
