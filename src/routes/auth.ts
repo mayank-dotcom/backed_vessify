@@ -88,7 +88,7 @@ authRoutes.post('/signup', async (c) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // Create user and account in a transaction
+        // Create user, account, organization, and session in a transaction
         const result = await prisma.$transaction(async (tx) => {
             // Create user
             const user = await tx.user.create({
@@ -106,6 +106,26 @@ authRoutes.post('/signup', async (c) => {
                     accountId: email,
                     providerId: 'credential',
                     password: hashedPassword
+                }
+            })
+
+            // Create default organization
+            const orgName = name ? `${name}'s Organization` : 'My Organization'
+            const orgSlug = email.split('@')[0] + '-' + Math.random().toString(36).substring(2, 7)
+
+            const organization = await tx.organization.create({
+                data: {
+                    name: orgName,
+                    slug: orgSlug
+                }
+            })
+
+            // Add user as organization owner
+            await tx.member.create({
+                data: {
+                    userId: user.id,
+                    organizationId: organization.id,
+                    role: 'owner'
                 }
             })
 
