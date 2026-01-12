@@ -16,14 +16,30 @@ export interface AuthContext {
 
 export async function authMiddleware(c: Context, next: Next) {
     try {
-        // Use Better Auth's session validation
-        // Better Auth can validate both session tokens and JWTs
-        const session = await auth.api.getSession({
-            headers: c.req.raw.headers
+        const authHeader = c.req.header('Authorization')
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return c.json({ error: 'Unauthorized - No token provided' }, 401)
+        }
+
+        const token = authHeader.substring(7)
+
+        // Validate token by finding session in database
+        const { prisma } = await import('../lib/db')
+        const session = await prisma.session.findFirst({
+            where: {
+                token,
+                expiresAt: {
+                    gt: new Date()
+                }
+            },
+            include: {
+                user: true
+            }
         })
 
-        if (!session || !session.user) {
-            return c.json({ error: 'Unauthorized - Invalid or expired session' }, 401)
+        if (!session) {
+            return c.json({ error: 'Unauthorized - Invalid or expired token' }, 401)
         }
 
         // Attach user and session to context
@@ -33,9 +49,9 @@ export async function authMiddleware(c: Context, next: Next) {
             name: session.user.name
         })
         c.set('session', {
-            id: session.session.id,
-            userId: session.session.userId,
-            expiresAt: new Date(session.session.expiresAt)
+            id: session.id,
+            userId: session.userId,
+            expiresAt: session.expiresAt
         })
 
         await next()

@@ -4,6 +4,7 @@ import { serve } from '@hono/node-server'
 import 'dotenv/config'
 import { auth } from './lib/auth'
 import transactionRoutes from './routes/transactions'
+import authRoutes from './routes/auth'
 
 const app = new Hono()
 
@@ -26,9 +27,11 @@ app.get('/', (c) => {
   })
 })
 
-// Better Auth routes - handles all authentication endpoints
-// Includes: /api/auth/sign-in, /api/auth/sign-up, /api/auth/sign-out, 
-// /api/auth/session, /api/auth/token (JWT), /api/auth/jwks, etc.
+// Custom auth routes (token-based, no cookies)
+app.route('/api/auth', authRoutes)
+
+// Better Auth routes - for organization management and other features
+// Includes: /api/auth/organization/*, etc.
 app.all('/api/auth/*', (c) => {
   return auth.handler(c.req.raw)
 })
